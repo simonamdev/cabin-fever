@@ -1,0 +1,15 @@
+{
+  "name": "cabinclient",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "parcel index.html",
+    "build": "rm -rf dist/ && parcel build index.html"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.12.4",
+    "ts-node": "^9.0.0",
+    "typescript": "^4.0.3"
+  }
+}
