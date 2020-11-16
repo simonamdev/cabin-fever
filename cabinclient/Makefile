@@ -1,0 +1,2 @@
+make:
+	yarn run dev
