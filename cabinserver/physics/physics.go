@@ -2,8 +2,8 @@ package physics
 
 //Position describes a point in positive co-ordinate space
 type Position struct {
-	X uint
-	Y uint
+	X uint `json:"x"`
+	Y uint `json:"y"`
 }
 
 type Direction string

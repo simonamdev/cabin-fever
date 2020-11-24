@@ -1,4 +1,5 @@
-import * as PIXI from 'pixi.js'
+// import * as PIXI from 'pixi.js'
+import * as PIXI from 'pixi.js-legacy'
 
 const app = new PIXI.Application();
 
@@ -78,6 +79,8 @@ ws.onopen = (e) => {
 ws.onmessage = (e) => {
     // When we receive the updated position, update the client side state
     const { data } = e;
+    console.log(data);
+
     const position: PlayerPosition = JSON.parse(data); // Ideally we do validation here
     // gameRoot.innerText = JSON.stringify(position);
     playerPosition.x = position.x * 10;
