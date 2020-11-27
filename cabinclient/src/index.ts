@@ -24,9 +24,15 @@ interface PlayerPosition {
 
 const playerPosition: PlayerPosition = { x: 0, y: 0 };
 
-let text = new PIXI.Text(`X: ${playerPosition.x} Y: ${playerPosition.y}`, { fontFamily: 'Arial', fontSize: 24, fill: 0xff1010, align: 'center' });
-text.anchor.x = 0.5;
-app.stage.addChild(text);
+let lastKeyText = new PIXI.Text(`Last Key: N/A`, { fontFamily: 'Arial', fontSize: 24, fill: 0xff1010, align: 'center' });
+let positionText = new PIXI.Text(`X: ${playerPosition.x} Y: ${playerPosition.y}`, { fontFamily: 'Arial', fontSize: 24, fill: 0xff1010, align: 'center' });
+
+lastKeyText.anchor.x = 0.5;
+lastKeyText.x = 500;
+lastKeyText.y = 500;
+positionText.anchor.x = 0.5;
+app.stage.addChild(lastKeyText);
+app.stage.addChild(positionText);
 
 // Listen for frame updates
 app.ticker.add(() => {
@@ -34,10 +40,10 @@ app.ticker.add(() => {
     // Update position
     graphics.x = playerPosition.x;
     graphics.y = playerPosition.y;
-    text.x = playerPosition.x;
-    text.y = playerPosition.y
-    text.text = `X: ${playerPosition.x} Y: ${playerPosition.y}`
-    text.updateText(true);
+    positionText.x = playerPosition.x;
+    positionText.y = playerPosition.y
+    positionText.text = `X: ${playerPosition.x} Y: ${playerPosition.y}`
+    positionText.updateText(true);
 });
 
 enum Direction {
@@ -69,6 +75,8 @@ ws.onopen = (e) => {
     if (body) {
         body.onkeydown = (e) => {
             console.log(e.key);
+            lastKeyText.text = `Last Key: ${e.key}`
+            lastKeyText.updateText(true);
             if (['w', 'a', 's', 'd'].includes(e.key)) {
                 ws.send(getDir(e.key));
             }
