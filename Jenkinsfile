@@ -16,7 +16,7 @@ pipeline {
         }
         stage('Build Backend') {
             agent {
-                docker { image 'golang' }
+                docker { image 'golang:1.16.2-alpine' }
             }
             steps {
                 dir('cabinserver') {
