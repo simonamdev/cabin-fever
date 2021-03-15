@@ -5,4 +5,5 @@ test:
 	go test ./...
 
 build:
-	go build -o cabinserver -ldflags "-linkmode external -extldflags -static" -a main.go
+	rm -rf cabinserver
+	CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o cabinserver .
