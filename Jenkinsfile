@@ -16,13 +16,11 @@ pipeline {
         }
         stage('Build Backend') {
             agent {
-                docker { image 'golang:alpine' }
+                docker { image 'golang' }
             }
             steps {
                 dir('cabinserver') {
                     // Add make to the docker container. TODO: Build this from a dockerifle?
-                    sh 'apk update'
-                    sh 'apk add make gcc'
                     sh 'make test'
                     sh 'make build'
                     archiveArtifacts artifacts: 'cabinserver'
