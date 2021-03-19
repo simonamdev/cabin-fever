@@ -35,6 +35,4 @@ WORKDIR /app
 
 EXPOSE 8080
 
-RUN chmod +x ./cabinserver
-
 ENTRYPOINT ["./cabinserver"]
