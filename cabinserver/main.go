@@ -16,6 +16,13 @@ func checkOrigin(r *http.Request) bool {
 
 var upgrader = websocket.Upgrader{CheckOrigin: checkOrigin}
 
+func serveFrontendHandler() func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		p := "./static/index.html"
+		http.ServeFile(w, r, p)
+	}
+}
+
 func gameWebsocketHandler(addPlayerC chan game.Player, updatesC chan physics.Direction) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		conn, err := upgrader.Upgrade(w, r, nil)
@@ -57,6 +64,8 @@ func main() {
 	config := game.Config{TicksPerSecond: 10}
 	addPlayerC := make(chan game.Player)
 	_, updatesC := game.RunGameLoop(config, addPlayerC)
+	http.HandleFunc("/", serveFrontendHandler())
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
 	http.HandleFunc("/game", gameWebsocketHandler(addPlayerC, updatesC))
 	log.Println("Starting server")
 	go log.Fatal(http.ListenAndServe(":8080", nil))
