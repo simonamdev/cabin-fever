@@ -35,4 +35,4 @@ WORKDIR /app
 
 EXPOSE 8080
 
-ENTRYPOINT ["./server"]
+ENTRYPOINT ["./cabinserver"]
