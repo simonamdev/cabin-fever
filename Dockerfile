@@ -1,9 +1,5 @@
 # Build the server
-FROM golang:alpine as serverbuilder
-
-RUN apk --update upgrade
-
-RUN rm -rf /var/cache/apk/*
+FROM golang as serverbuilder
 
 RUN mkdir /build 
 ADD ./cabinserver /build/
@@ -12,10 +8,7 @@ WORKDIR /build
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags '-extldflags "-static"' -o cabinserver .
 
 # Build the client
-FROM node:14-alpine as clientbuilder
-
-RUN apk --update upgrade
-RUN rm -rf /var/cache/apk/*
+FROM node as clientbuilder
 
 RUN mkdir /build 
 ADD ./cabinclient /build/
