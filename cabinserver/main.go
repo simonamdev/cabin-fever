@@ -3,11 +3,18 @@ package main
 import (
 	"cabinserver/game"
 	"cabinserver/physics"
+	"embed"
+	"io/fs"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/websocket"
 )
+
+// Embed all static files
+
+//go:embed static
+var staticFiles embed.FS
 
 // Websocket equivalent of CORS
 func checkOrigin(r *http.Request) bool {
@@ -61,11 +68,17 @@ func gameWebsocketHandler(addPlayerC chan game.Player, updatesC chan physics.Dir
 
 // Simplest web server example, taken from https://golang.org/doc/articles/wiki/
 func main() {
+	// Setup embedded file system
+	fsys, err := fs.Sub(staticFiles, "static")
+	if err != nil {
+		panic(err)
+	}
+	// Setup game
 	config := game.Config{TicksPerSecond: 10}
 	addPlayerC := make(chan game.Player)
 	_, updatesC := game.RunGameLoop(config, addPlayerC)
 	http.HandleFunc("/", serveFrontendHandler())
-	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.FS(fsys))))
 	http.HandleFunc("/game", gameWebsocketHandler(addPlayerC, updatesC))
 	log.Println("Starting server")
 	go log.Fatal(http.ListenAndServe(":8080", nil))
