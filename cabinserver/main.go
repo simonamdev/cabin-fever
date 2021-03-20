@@ -13,6 +13,9 @@ import (
 
 // Embed all static files
 
+//go:embed static/index.html
+var indexHTML string
+
 //go:embed static
 var staticFiles embed.FS
 
@@ -25,8 +28,8 @@ var upgrader = websocket.Upgrader{CheckOrigin: checkOrigin}
 
 func serveFrontendHandler() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		p := "./static/index.html"
-		http.ServeFile(w, r, p)
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		w.Write([]byte(indexHTML))
 	}
 }
 
@@ -78,7 +81,7 @@ func main() {
 	addPlayerC := make(chan game.Player)
 	_, updatesC := game.RunGameLoop(config, addPlayerC)
 	http.HandleFunc("/", serveFrontendHandler())
-	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.FS(fsys))))
+	http.Handle("/static/", http.FileServer(http.FS(fsys)))
 	http.HandleFunc("/game", gameWebsocketHandler(addPlayerC, updatesC))
 	log.Println("Starting server")
 	go log.Fatal(http.ListenAndServe(":8080", nil))
