@@ -22,4 +22,19 @@ resource "hcloud_server" "cabinfever-dev" {
   name        = "cabinfever-dev"
   image       = "debian-9"
   server_type = "cx11"
+  ssh_keys    = [hcloud_ssh_key.default.id]
+
+  provisioner "file" {
+    source      = "../cabinserver-prod"
+    destination = "/srv/cabinserver"
+
+    connection {
+      type        = "ssh"
+      user        = "root"
+      host        = self.ipv4_address
+      private_key = file("~/.ssh/cabinfever")
+    }
+  }
+
+
 }
