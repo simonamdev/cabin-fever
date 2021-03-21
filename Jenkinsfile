@@ -3,14 +3,15 @@ pipeline {
     stages {
         stage('Build Frontend') {
             agent {
-                docker { image 'node:14-alpine' }
+                docker { image 'node' }
             }
             steps {
                 dir('cabinclient') {
                     sh 'yarn'
                     sh 'yarn run test'
                     sh 'yarn run build'
-                    archiveArtifacts artifacts: 'dist/**/*.*'
+                    sh 'mv dist/ static/'
+                    stash(name: 'frontend', includes: 'static/**/*')
                 }
             }
         }
@@ -22,8 +23,8 @@ pipeline {
                 dir('cabinserver') {
                     // Add make to the docker container. TODO: Build this from a dockerifle?
                     sh 'make test'
+                    unstash('frontend')
                     sh 'make build'
-                    archiveArtifacts artifacts: 'cabinserver'
                 }
             }
         }
