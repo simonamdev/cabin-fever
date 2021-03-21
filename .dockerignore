@@ -4,3 +4,9 @@ cabinclient/node_modules
 
 cabinserver/cabinserver
 cabinserver/cabinserver-dev
+
+deploy/
+Jenkinsfile
+LICENSE
+README.md
+cabinserver-prod

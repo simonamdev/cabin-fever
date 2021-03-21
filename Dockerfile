@@ -26,6 +26,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags '-extldflag
 FROM scratch
 
 COPY --from=serverbuilder /build/cabinserver /app/
+COPY --from=clientbuilder /build/dist/* /app/static/
 
 WORKDIR /app
 
