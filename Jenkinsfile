@@ -10,6 +10,7 @@ pipeline {
                     sh 'make install'
                     sh 'make test'
                     sh 'make build'
+                    sh 'rm -rf static/'
                     sh 'mv dist/ static/'
                     stash(name: 'frontend', includes: 'static/**/*')
                 }
