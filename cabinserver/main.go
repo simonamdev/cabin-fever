@@ -81,7 +81,7 @@ func main() {
 	addPlayerC := make(chan game.Player)
 	_, updatesC := game.RunGameLoop(config, addPlayerC)
 	http.HandleFunc("/", serveFrontendHandler())
-	http.Handle("/static/", http.FileServer(http.FS(fsys)))
+	http.Handle("/static/", http.StripPrefix("/static", http.FileServer(http.FS(fsys))))
 	http.HandleFunc("/game", gameWebsocketHandler(addPlayerC, updatesC))
 	log.Println("Starting server")
 	go log.Fatal(http.ListenAndServe(":8080", nil))
