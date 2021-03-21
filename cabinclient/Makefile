@@ -1,11 +1,11 @@
-make dev:
+dev:
 	yarn run dev
 
-make build:
+build:
 	yarn run build
 
-make test:
+test:
 	yarn run test
 
-make install:
+install:
 	yarn
