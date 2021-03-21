@@ -7,9 +7,9 @@ pipeline {
             }
             steps {
                 dir('cabinclient') {
-                    sh 'yarn'
-                    sh 'yarn run test'
-                    sh 'yarn run build'
+                    sh 'make install'
+                    sh 'make test'
+                    sh 'make build'
                     sh 'mv dist/ static/'
                     stash(name: 'frontend', includes: 'static/**/*')
                 }
@@ -25,6 +25,7 @@ pipeline {
                     sh 'make test'
                     unstash('frontend')
                     sh 'make build'
+                    archiveArtifacts artifacts: 'cabinserver'
                 }
             }
         }
